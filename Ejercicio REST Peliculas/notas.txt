@@ -1,0 +1,35 @@
+Recurso principal - la entidad que vamos a manejar: peliculas
+
+Rutas principales - que operaciones hacemos con el recurso principal (las peliculas): 
+- obtener todas las peliculas: GET /peliculas
+- obtener una pelicula concreta: GET /peliculas/{id}
+- crear una pelicula: POST /peliculas
+- modificar una pelicula: PUT /peliculas/{id}
+- eliminar una pelicula: DELETE /peliculas/{id}
+
+Códigos de estado - como responde el servicio ante diferentes situaciones
+- 200 OK: respuesta correcta
+- 201 Created: recurso creado correctamente
+- 400 Bad Request: error en la solicitud
+- 404 Not Found: recurso no encontrado
+- 500 Internal Server Error: fallo dentro del servidor
+
+Ejemplo de mensaje JSON:
+{
+  "id": 1,
+  "titulo": "Interstellar",
+  "año": 2014,
+  "directores": ["Christopher Nolan"],
+  "generos": ["Ciencia ficción", "Aventura"],
+  "minutos": 169,
+  "puntuacion": 8.6,
+  "actores": ["Matthew McConaughey", "Anne Hathaway"],
+  "descripcion": "Un grupo de astronautas viaja a través de un agujero de gusano en busca de un nuevo hogar para la humanidad.",
+  "idioma": "Inglés"
+}
+
+Definir respuestas y codigos de estado:
+- obtener una pelicula concreta: GET /peliculas/{id}: 200 OK si existe devolvemos el JSON, 404 Not found si no existe
+- crear una pelicula: POST /peliculas: 201 Created devolvemos json con el id, 400 Bad Request si el formato no es valido
+- modificar una pelicula: PUT /peliculas/{id}: 200 Ok si correcta, 404 not found si no existe, 400 bad request si datos incorrectos
+- eliminar una pelicula: DELETE /peliculas/{id}: 200 ok si correcto, 404 not found si no existe
