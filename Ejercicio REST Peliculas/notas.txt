@@ -28,8 +28,21 @@ Ejemplo de mensaje JSON:
   "idioma": "Inglés"
 }
 
-Definir respuestas y codigos de estado:
+Definir respuestas y codigos de estado (los errores 500 de servidor no estan bajo mi control):
+
+- lista de sesiones (se puede filtrar por los parametros de la sesion): GET /sesiones: 200 OK, 400 bad request si parametro no es valido
+- informacion de una sesion (fecha y horario, sala, pelicula, idioma, formato, asientosdisponibles, adaptada, precio, otros): GET /sesiones/:id: 200, 404 (id no valido)
+- crear una sesion: POST /sesiones: 201 created, 400 bad request (datos del json incorrectos), 401 unauthorized, 403 no permisos. Devuelve URI de la sesion (HATEOAS)
+- actualizar una sesion: PUT /sesiones/:id: 200 OK, 400 bad request (datos del json incorrectos), 401 unauthorized, 403 no permisos
+- eliminar una sesion: DELETE /sesiones/:id: 200 OK, 404 (id no valido), 401 unauthorized, 403 no permisos
+- comprar una entrada para una sesion (numero de entradas): POST /sesiones/:id/reservar: 201 created, 400 bad request (datos del json incorrectos), 401 unauthorized, 403 no permisos, 404 id no valido. Devuelve json con info de la entrada
+
+para peliculas los codigos de estado son los mismos que sesiones
+- lista de peliculas: GET /peliculas
 - obtener una pelicula concreta: GET /peliculas/{id}: 200 OK si existe devolvemos el JSON, 404 Not found si no existe
 - crear una pelicula: POST /peliculas: 201 Created devolvemos json con el id, 400 Bad Request si el formato no es valido
 - modificar una pelicula: PUT /peliculas/{id}: 200 Ok si correcta, 404 not found si no existe, 400 bad request si datos incorrectos
 - eliminar una pelicula: DELETE /peliculas/{id}: 200 ok si correcto, 404 not found si no existe
+- obtener las sesiones de una pelicula (filtrar por los parametros de la sesion): GET /peliculas/:id/sesiones
+
+- otros: /usuarios
