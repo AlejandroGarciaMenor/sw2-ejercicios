@@ -1,0 +1,391 @@
+openapi: 3.0.3 # solo funciona con esta version
+info:
+  title: API de nuestro cine TruFilms
+  version: 0.0.1
+  description: API para interactuar con nuestro cine (sus peliculas y sesiones)
+paths: # objeto para describir en detalle todas las rutas de nuestra API
+  /sesiones:
+    get:
+      summary: Lista de las sesiones
+      description: Recoge la lista de las sesiones. Se puede filtrar por los parametros de la sesion
+      parameters:
+        - name: fecha
+          in: query
+          description: Filtrar sesiones por fecha
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: version
+          in: query
+          description: Filtrar sesiones por version (ej. doblado)
+          required: false
+          schema:
+            type: string
+      responses: # responses object
+        "200":
+          description: "Lista de sesiones obtenida con éxito"
+          content: # Media Map (listado de MIME Types que contiene un Media Type object)
+            application/json:
+              schema: # un JSON Schema
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    pelicula:
+                      type: string
+                    horario:
+                      type: string
+                      format: time
+                    sala:
+                      type: integer
+                    version:
+                      type: string
+                    formato:
+                      type: string
+                    asientos_disponibles:
+                      type: integer
+                    adaptada:
+                      type: boolean
+                    precio:
+                      type: number
+        "400":
+          description: "Parametro de filtro no es valido"
+    post:
+      summary: Crear una sesión nueva
+      description: Puedes crear una sesión indicando sus datos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - pelicula
+                - horario
+                - sala
+                - version
+                - formato
+                - asientos_disponibles
+                - precio
+              properties:
+                pelicula:
+                  type: string
+                horario:
+                  type: string
+                  format: date
+                sala:
+                  type: integer
+                version:
+                  type: integer
+                formato:
+                  type: integer
+                asientos_disponibles:
+                  type: integer
+                adaptada:
+                  type: boolean
+                precio:
+                  type: number
+                  format: float
+      responses:
+        "201":
+          description: Sesion creada correctamente
+          headers:
+            Location:
+              description: URI de la sesion creada
+              schema:
+                type: string
+        "400":
+          description: El JSON enviado no es correcto
+        "401":
+          description: No autorizado
+        "403":
+          description: No tiene persmisos para crear sesiones
+  /sesiones/{id}:
+    get:
+      summary: Información de una sesión
+      description: Obtiene los detalles de una sesión específica por su ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID de la sesión
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Información de la sesión obtenida con éxito
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  pelicula:
+                    type: string
+                  horario:
+                    type: string
+                    format: time
+                  sala:
+                    type: integer
+                  version:
+                    type: string
+                  formato:
+                    type: string
+                  asientos_disponibles:
+                    type: integer
+                  adaptada:
+                    type: boolean
+                  precio:
+                    type: number
+                    format: float
+                  otros:
+                    type: string
+        "404":
+          description: Sesión no encontrada (ID inválido)
+    put:
+      summary: Actualizar una sesión
+      description: Permite actualizar una sesión existente mediante su ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID de la sesión a actualizar
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pelicula:
+                  type: string
+                horario:
+                  type: string
+                  format: time
+                sala:
+                  type: integer
+                version:
+                  type: string
+                formato:
+                  type: string
+                asientos_disponibles:
+                  type: integer
+                adaptada:
+                  type: boolean
+                precio:
+                  type: number
+                  format: float
+      responses:
+        "200":
+          description: Sesión actualizada correctamente
+        "400":
+          description: El JSON enviado no es válido
+        "401":
+          description: No autorizado (se requiere autenticación)
+        "403":
+          description: No tiene permisos para actualizar sesiones
+        "404":
+          description: Sesión no encontrada (ID inválido)
+    delete:
+      summary: Eliminar una sesión
+      description: Permite eliminar una sesion a traves de su idç
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID de la sesion que eliminamos
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Sesion eliminada correctamente
+        "401":
+          description: No autorizado (se requiere autenticación)
+        "403":
+          description: No tiene permisos para eliminar sesiones
+        "404":
+          description: Sesión no encontrada (ID inválido)
+  /sesiones/{id}/reservar:
+    post:
+      summary: Reservar una sesión
+      description: Comprar / reservar asientos para la sesion deseada
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID de la sesion a reservar
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - numero_entradas
+                - asientos
+              properties:
+                numero_entradas:
+                  type: integer
+                asientos:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        "201":
+          description: Entrada comprada correctamente
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id_reserva:
+                    type: integer
+                  numero_entradas:
+                    type: integer
+                  asientos:
+                    type: array
+                    items:
+                      type: string
+        "400":
+          description: El JSON enviado no es válido
+        "401":
+          description: No autorizado (se requiere autenticación)
+        "403":
+          description: No tiene permisos para comprar entradas
+        "404":
+          description: Sesión no encontrada (ID inválido)
+  /peliculas:
+    get:
+      summary: Obtener la lista de películas
+      description: Devuelve la lista de películas disponibles en el cine.
+      responses:
+        "200":
+          description: Lista de películas obtenida
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Pelicula"
+        "400":
+          description: Algún parámetro de filtrado no es válido
+
+    post:
+      summary: Crear una nueva película
+      description: Permite registrar una nueva película en el sistema.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Pelicula"
+      responses:
+        "201":
+          description: Película creada exitosamente
+          headers:
+            Location:
+              description: URI de la película creada
+              schema:
+                type: string
+        "400":
+          description: El JSON enviado no es válido
+        "401":
+          description: No autorizado (se requiere autenticación)
+        "403":
+          description: No tiene permisos para registrar películas
+
+  /peliculas/{id}:
+    get:
+      summary: Obtener información de una película
+      description: Devuelve los detalles de una película específica
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID de la película a obtener
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Información de la película recuperada correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pelicula"
+        "404":
+          description: Película no encontrada (ID inválido)
+components:
+  schemas:
+    Pelicula:
+      type: object
+      description: Información de una película
+      properties:
+        titulo:
+          type: string
+          description: Nombre de la película
+        año:
+          type: integer
+          minimum: 1800
+        directores:
+          type: array
+          items:
+            $ref: "#/components/schemas/Persona"
+        generos:
+          type: array
+          items:
+            type: string
+            enum:
+              - Acción
+              - Aventura
+              - Fantasía
+              - Ciencia ficción
+          uniqueItems: true
+          minItems: 1
+        minutos:
+          type: integer
+          minimum: 1
+        puntuacion:
+          type: number
+          minimum: 0
+          maximum: 10
+        actores:
+          type: array
+          items:
+            $ref: "#/components/schemas/Persona"
+        presupuesto:
+          type: integer
+        descripcion:
+          type: string
+        idioma:
+          type: string
+        beneficios:
+          type: integer
+        premios:
+          type: array
+          items:
+            type: object
+            properties:
+              año:
+                type: integer
+              titulo:
+                type: string
+              ganado:
+                type: boolean
+              categoria:
+                type: string
+    Persona:
+      type: object
+      description: Información de una persona relacionada con una película
+      properties:
+        nombre:
+          type: string
+        edad:
+          type: integer
