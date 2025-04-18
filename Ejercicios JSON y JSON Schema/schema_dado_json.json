@@ -1,0 +1,61 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://example.com/squads.json",
+    "type": "object",
+    "title": "Squad",
+    "description": "Information about a squad",
+    "properties": {
+        "squadName": {
+            "type": "string",
+            "description": "The name of the squad"
+        },
+        "homeTown": {
+            "type": "string",
+            "description": "The hometown of the squad"
+        },
+        "formed": {
+            "type": "integer",
+            "description": "The year the squad was formed"
+        },
+        "secretBase": {
+            "type": "string",
+            "description": "The secret base of the squad"
+        },
+        "active": {
+            "type": "boolean",
+            "description": "Whether the squad is active or not"
+        },
+        "members": {
+            "type": "array",
+            "description": "The members of the squad",
+            "items": {
+                "type": "object",
+                "required": ["name", "age", "secretIdentity", "powers"],
+                "minItems": 1,
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "The name of the member"
+                    },
+                    "age": {
+                        "type": "integer",
+                        "description": "The age of the member"
+                    },
+                    "secretIdentity": {
+                        "type": "string",
+                        "description": "The secret identity of the member"
+                    },
+                    "powers": {
+                        "type": "array",
+                        "description": "Powers of the member",
+                        "items": {
+                            "type": "string",
+                            "description": "A power of the member"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "required": ["squadName", "homeTown", "formed", "active", "members"]
+}
