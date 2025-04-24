@@ -82,7 +82,7 @@ sample_airbnb> db.listingsAndReviews.aggregate([{"$project": {"room_type": 1, "_
  2. En sample_training.companies, haga una query que 
 devuelva el nombre y el año en el que se fundaron las 5 
 compañías más antiguas.
-sample_training> db.companies.find({}, {"name": 1, "founded_year": 1, "_id": 0}).sort({"founded_year": -1}).limit(5)
+sample_training> db.companies.find({}, {"name": 1, "founded_year": 1, "_id": 0}).sort({"founded_year": 1}).limit(5)
 [
   { name: 'Clowdy', founded_year: 2013 },
   { name: 'Advaliant', founded_year: 2013 },
