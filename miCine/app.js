@@ -6,6 +6,7 @@ const logger = require('morgan');
 
 const indexRouter = require('./routes/index');
 const peliculasRouter = require('./routes/peliculas');
+const sesionesRouter = require('./routes/sesiones');
 
 let app = express();
 
@@ -21,6 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use(process.env.BASE_URI + '/peliculas', peliculasRouter);
+app.use(process.env.BASE_URI + '/peliculas/:id/sesiones', sesionesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
