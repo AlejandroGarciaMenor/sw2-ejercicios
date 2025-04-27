@@ -1,0 +1,17 @@
+<tvschedule name="TV Schedule">
+    <channel chan="1">
+        <banner>http://www.example.com/banner.jpg</banner>
+        <day>
+            <date>2025-04-24</date>
+            <holiday>True</holiday>
+        </day>
+        <day>
+            <date>2025-04-24</date>
+            <programslot vtr="1">
+                <time>08:00</time>
+                <title rating="10" language="en">Morning News</title>
+                <description>Latest news updates and weather.</description>
+            </programslot>
+        </day>
+    </channel>
+</tvschedule>
